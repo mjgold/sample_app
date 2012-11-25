@@ -12,12 +12,12 @@ describe "Static pages" do
     it "should have the base title" do
       visit root_path
       page.should have_selector('title',
-                        content: "Ruby on Rails Tutorial Sample App")
+                        text: "Ruby on Rails Tutorial Sample App")
     end
 
     it "should not have a custom page title" do
       visit root_path
-      page.should_not have_selector('title', content: '| Home')
+      page.should_not have_selector('title', text: '| Home')
     end
   end
 
