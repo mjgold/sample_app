@@ -10,11 +10,10 @@ describe "Static pages" do
     it { should have_selector('h1',    text: 'Sample App') }
     it { should have_selector('title', text: full_title('')) }
     it { should_not have_selector 'title', text: '| Home' }
-
-    end
+  end
 
   describe "Help page" do
-    before { visit help_path }
+    before { visit help_path } 
 
     it { should have_selector('h1',    text: 'Help') }
     it { should have_selector('title', text: full_title('Help')) }
@@ -34,4 +33,25 @@ describe "Static pages" do
     it { should have_selector('title', text: full_title('Contact')) }
   end
 
+  it "should have the right links on the layout" do
+    visit root_path 
+    click_link "About"
+    page.should have_selector 'title', text: full_title('About Us') 
+
+    / Why doesn't this work if 'it' above is changed to 'describe'?
+    before { visit help_path } 
+    click_link "Help"
+    it { should have_selector 'title', text: full_title('Help') }
+    /
+    visit contact_path
+    click_link "Contact"
+    page.should have_selector 'title', text: full_title('Contact') 
+
+    click_link "Home"
+    click_link "Sign up now!"
+    page.should have_selector 'title', text: full_title('Sign up') 
+    
+    click_link "sample app"
+    page.should have_selector 'title', text: full_title('') 
+  end
 end

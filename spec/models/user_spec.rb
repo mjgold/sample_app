@@ -27,8 +27,11 @@ describe User do
     it { should respond_to(:password_confirmation) }
     it { should respond_to(:remember_token) }
     it { should respond_to(:authenticate) }
+    it { should respond_to(:admin) }
+	it { should respond_to(:authenticate) }
 
-    it { should be_valid }
+	it { should be_valid }
+	it { should_not be_admin }
 
     describe "when name is not present" do
     	before { @user.name = " " }
@@ -54,6 +57,16 @@ describe User do
 		      @user.should_not be_valid
 	        end      
 	    end
+  	end
+
+  	describe "when email is not downcase" do
+  		let(:uppercase_email) { "TEST@TEST.COM"}
+
+  		it "should be set to downcase" do
+  			@user.email = uppercase_email
+  			@user.save
+  			@user.email.should == uppercase_email.downcase
+  		end	
   	end
 
 	describe "when email format is valid" do
@@ -116,4 +129,21 @@ describe User do
       before { @user.save }
       its(:remember_token) { should_not be_blank }
     end
+
+	describe "with admin attribute set to 'true'" do
+	  before do
+        @user.save!
+	    @user.toggle!(:admin)
+	  end
+
+	  it { should be_admin }
+	end
+
+	describe "confirm admin attribute is not accessible" do
+		it "should not be accessible" do
+			expect do
+			  @user.update_attributes(:admin => true)
+      		end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+   		end
+    end   
 end
